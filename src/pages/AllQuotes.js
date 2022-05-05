@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import QuoteList from "../components/quotes/QuoteList";
-
-const QUOTES = [
-  { id: "q1", author: "othmane", text: "react is good" },
-  { id: "q2", author: "ouaklim", text: "react is great" },
-];
+import LoadingSpinner from "../components/UI/LoadingSpinner";
+import NoQuotesFound from "../components/quotes/NoQuotesFound";
+import useHttp from "../hooks/use-http";
+import { getAllQuotes } from "../lib/api";
 
 const AllQuotes = () => {
-  return <QuoteList quotes={QUOTES} />;
+  const {
+    sendRequest,
+    status,
+    data: loadedQuotes,
+    error,
+  } = useHttp(getAllQuotes, true);
+
+  useEffect(() => {
+    sendRequest();
+  }, [sendRequest]);
+
+  return <QuoteList quotes={loadedQuotes} />;
 };
 
 export default AllQuotes;
