@@ -24,6 +24,23 @@ export async function getAllQuotes() {
   return transformedQuotes;
 }
 
+//! Getting single quote :
+export async function getSingleQuote(quoteId) {
+  const response = await fetch(`${FIREBASE_DOMAIN}/quotes/${quoteId}.json`);
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Could not fetch quote.");
+  }
+
+  const loadedQuote = {
+    id: quoteId,
+    ...data,
+  };
+
+  return loadedQuote;
+}
+
 //! Adding a quote :
 export async function addQuote(quoteData) {
   const response = await fetch(`${FIREBASE_DOMAIN}/quotes.json`, {
