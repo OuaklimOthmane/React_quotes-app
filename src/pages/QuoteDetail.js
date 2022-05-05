@@ -1,6 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { Route, useParams, Redirect } from "react-router-dom";
+import {
+  Route,
+  useParams,
+  useRouteMatch,
+  Link,
+  Redirect,
+} from "react-router-dom";
 import Comments from "../components/comments/Comments";
 import HighlightedQuote from "../components/quotes/HighlightedQuote";
 
@@ -10,6 +15,7 @@ const QUOTES = [
 ];
 
 const QuoteDetail = () => {
+  const match = useRouteMatch();
   const params = useParams();
   const { quoteId } = params;
 
@@ -25,20 +31,30 @@ const QuoteDetail = () => {
     <>
       <HighlightedQuote text={quote.text} author={quote.author} />
 
-      <Route path={`/quotes/${quoteId}`} exact>
+      <Route path={`${match.path}`} exact>
         <div className="centered">
-          <Link className="btn--flat" to={`/quotes/${quoteId}/comments`}>
+          <Link className="btn--flat" to={`${match.url}/comments`}>
             Load comments
           </Link>
         </div>
       </Route>
 
-      <Route path={`/quotes/${quoteId}/comments`}>
+      {/* <Route path={`/quotes/:id/comments`} exact> */}
+      {/* <Route path={`/quotes/${quoteId}/comments`}> */}
+      <Route path={`${match.path}/comments`}>
         <Comments />
       </Route>
-      {/* <Route path={`/quotes/:id/comments`} exact> */}
     </>
   );
 };
 
 export default QuoteDetail;
+
+//! useRouteMatch() :
+//? The "useRouteMatch" hook attempts to match the current URL in the same way that a <Route> would. It's mostly useful for getting access to the match data without actually rendering a <Route>
+
+//! match.url Vs match.path :
+//?  "match.url" is MORE SPECIFIC than "match.path".
+//? "match.path" - (string) The path pattern used to match. Useful for building nested "<Route>s" ------>  path: '/quotes/:quotesId'
+
+//? "match.url" - (string) The matched portion of the URL. Useful for building nested "<Link>s" ------>  URL: '/quotes/q2'
