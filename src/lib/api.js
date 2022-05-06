@@ -79,3 +79,27 @@ export async function addComment(requestData) {
 
   return { commentId: data.name };
 }
+
+//! Getting all comments :
+export async function getAllComments(quoteId) {
+  const response = await fetch(`${FIREBASE_DOMAIN}/comments/${quoteId}.json`);
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Could not get comments.");
+  }
+
+  const transformedComments = [];
+
+  for (const key in data) {
+    const commentObj = {
+      id: key,
+      ...data[key],
+    };
+
+    transformedComments.push(commentObj);
+  }
+
+  return transformedComments;
+}
