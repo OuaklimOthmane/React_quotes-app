@@ -58,3 +58,21 @@ export async function addQuote(quoteData) {
 
   return null;
 }
+
+//! Adding a comment :
+export async function addComment(commentData, quoteId) {
+  const response = await fetch(`${FIREBASE_DOMAIN}/comments/${quoteId}.json`, {
+    method: "POST",
+    body: JSON.stringify(commentData),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Could not add comment.");
+  }
+
+  return { commentId: data.name };
+}
